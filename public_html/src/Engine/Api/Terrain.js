@@ -18,3 +18,8 @@ function Terrain(terrainTexture,traversability, xPos, yPos)
     this.mTerrain.getXform().setSize(10,10);
     
 }
+
+Terrain.prototype.draw = function(aCamera)
+{
+  this.mTerrain.draw(aCamera.getVPMatrix());  
+};
