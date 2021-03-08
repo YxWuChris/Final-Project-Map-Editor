@@ -35,6 +35,9 @@ function Map(xDimensions, yDimensions, centerLocation)
     //Whether the map is in deletion mode
     this.mDeleteMode = false;
     
+    //Whether the map is in terrain mode
+    this.mTerrainMode = false;
+    
     //Map Object Set for all map objects to be held
     this.mMapObjects = new MapObjectSet(); 
     
@@ -53,13 +56,17 @@ Map.prototype.update = function()
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Space))
     {
-        if(!this.mDeleteMode) //Place new Object
-        {
-            this.addMapObject(selectorXform.getXPos(),selectorXform.getYPos()); //Object placement based upon 
-        }
-        else //Remove object
+        if(this.mDeleteMode) //Remove object
         {
             this.removeMapObject(selectorXform.getXPos(), selectorXform.getYPos());
+        }
+        else if(this.mTerrainMode) //Place new Terrain
+        {
+            this.placeTerrain(selectorXform.getXPos(),selectorXform.getYPos());
+        }
+        else //Add new Object
+        {
+            this.addMapObject(selectorXform.getXPos(),selectorXform.getYPos()); //Object placement based upon 
         }
         
     }
@@ -73,8 +80,28 @@ Map.prototype.update = function()
         else
         {
             this.mDeleteMode = true;
+            this.mTerrainMode = false;
         }
         this.mMapSelector.changeMode();
+    }
+    
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.T))
+    {
+        if(this.mDeleteMode)
+        {
+            this.mDeleteMode = false;
+            this.mMapSelector.changeMode();
+        }
+        
+        //This behaviour is weird, should probably think of a better way
+        if(this.mTerrainMode)
+        {
+            this.mTerrainMode = false;
+        }
+        else
+        {
+            this.mTerrainMode = true;
+        }
     }
   this.mMapObjects.update();
   this.mMapSelector.update();  
@@ -141,6 +168,23 @@ Map.prototype.selectObject = function()
 Map.prototype.selectTerrain = function()
 {
     //Reserved
+};
+
+Map.prototype.placeTerrain = function(xPos, yPos)
+{
+    
+    for(let terrain of this.mTerrainSet.mSet)
+    {
+        if(terrain.mTerrain.getXform().getXPos() === xPos
+                && terrain.mTerrain.getXform().getYPos() === yPos){
+            
+            //This needs updating --- SUPER BASIC right now
+                terrain.mTerrain = new TextureRenderable(this.kDirt);
+                terrain.mTerrain.getXform().setPosition(xPos,yPos);
+                terrain.mTerrain.getXform().setSize(10,10);
+                break;
+        }
+    }
 };
 
 //Initilize the map to have a default terrain
