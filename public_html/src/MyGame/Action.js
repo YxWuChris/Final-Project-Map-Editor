@@ -29,7 +29,7 @@ MyGame.prototype.initialize = function () {
     this.luCamera.setBackgroundColor([0.8, 1.0, 0.8, 1.0]);
     // this.luCamera.setWCHeight(100)
 
-    this.center = new TextureRenderable(this.kBound);
+    this.center = new MapObject(this.kBound);
     this.center.getXform().setPosition(0, 0);
     this.center.getXform().setSize(10,10);
 
