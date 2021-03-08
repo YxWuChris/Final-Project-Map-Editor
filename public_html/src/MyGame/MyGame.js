@@ -18,6 +18,11 @@ function MyGame() {
     this.kTree = "assets/tree.png";
     this.kHouse= "assets/house.png";
 
+
+    //Textures for Terrain
+    this.kDirt = "assets/MapTextures/dirt2.png";
+    this.kGrass = "assets/MapTextures/grass2.png";
+    
     //The Map
     this.mMap = null;
     
@@ -31,11 +36,19 @@ MyGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kTree);
     gEngine.Textures.loadTexture(this.kDelete);
     gEngine.Textures.loadTexture(this.kHouse);
+    gEngine.Textures.loadTexture(this.kDirt);
+    gEngine.Textures.loadTexture(this.kGrass);
 
 };
 
 MyGame.prototype.unloadScene = function () {
-
+    
+    gEngine.Textures.unloadTexture(this.kBound);
+    gEngine.Textures.unloadTexture(this.kTree);
+    gEngine.Textures.unloadTexture(this.kDelete);
+    gEngine.Textures.unloadTexture(this.kHouse);
+    gEngine.Textures.unloadTexture(this.kDirt);
+    gEngine.Textures.unloadTexture(this.kGrass);
 };
 
 MyGame.prototype.initialize = function () {
@@ -46,7 +59,7 @@ MyGame.prototype.initialize = function () {
             [0, 0, 600, 600]);
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
-    this.mMap = new Map(10,10,vec2.fromValues(50,50));
+    this.mMap = new Map(10,10,vec2.fromValues(50,50));//Creates a 10x10 Map Centered at 50,50
 };
 
 MyGame.prototype.draw = function () {

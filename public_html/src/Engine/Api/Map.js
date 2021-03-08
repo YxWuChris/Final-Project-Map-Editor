@@ -20,6 +20,7 @@ function Map(xDimensions, yDimensions, centerLocation)
     this.kHouse = "assets/house.png";
     
     this.mObjectSource = this.kTree; //The Texture source for new map Objects
+    this.mTerrainSource = this.kGrass; //The Texture source for new Terrain
     
     //Setting up the Maps physical dimensions
     this.mHeight = 10 * xDimensions;
@@ -35,6 +36,11 @@ function Map(xDimensions, yDimensions, centerLocation)
     
     //Map Object Set for all map objects to be held
     this.mMapObjects = new MapObjectSet(); 
+    
+    //Terrain Object Set for the Maps Terrain to be held
+    this.mTerrainSet = new TerrainSet();
+    
+    this.initMap();
 }
 
 
@@ -76,10 +82,10 @@ Map.prototype.update = function()
 Map.prototype.draw = function(aCamera)
 {
     //Always draw terrain first
+    this.mTerrainSet.draw(aCamera);
     
     //Then draw the objects
     this.mMapObjects.draw(aCamera);
-    
     
     //Always draw the selector last
     this.mMapSelector.draw(aCamera);
@@ -138,4 +144,27 @@ Map.prototype.selectObject = function()
         this.source = this.kHouse;
     }
 
+};
+
+Map.prototype.selectTerrain = function()
+{
+    //Reserved
+};
+
+//Initilize the map to have a default terrain
+Map.prototype.initMap = function()
+{
+    var tXPos = 5 + this.mCenterLocation[0] - this.mWidth/2;
+    var tYPos = 5 + this.mCenterLocation[1] - this.mHeight/2;
+    var xDim = this.mWidth / 10;
+    var yDim = this.mHeight/ 10;
+    var i,j;
+    for(i = 0; i < xDim; i++)
+    {
+        for(j = 0; j < yDim; j++)
+        {
+            var baseTerrain = new Terrain(this.mTerrainSource, true, tXPos + (10 * i),tYPos + (10 * j));
+            this.mTerrainSet.addToSet(baseTerrain);
+        }
+    }
 };
