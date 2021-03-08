@@ -16,18 +16,10 @@ gEngine.Core.inheritPrototype(Center, Scene);
 
 Center.prototype.update = function(){
 
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.A) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.D) && this.leftBoundJudgement()){
-        this.center.getXform().incXPosBy(-5);
-    }
-    else if (gEngine.Input.isKeyClicked(gEngine.Input.keys.D) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.A) && this.rightBoundJudgement()){
-        this.center.getXform().incXPosBy(5);
-    }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.W) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.S) && this.topBoundJudgement()){
-        this.center.getXform().incYPosBy(5);
-    }
-    else if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && this.bottomBoundJudgement() ){
-        this.center.getXform().incYPosBy(-5);
-    }
+    this.MoveDown()
+    this.MoveLeft()
+    this.MoveUp()
+    this.MoveRight()
 
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q) && !this.delete_mode) {
         this.delete_mode = true;
@@ -43,10 +35,36 @@ Center.prototype.update = function(){
 }
 
 Center.prototype.draw = function(mCamera){
-
     this.center.draw(mCamera.getVPMatrix());
-
 }
+
+
+Center.prototype.MoveLeft = function(){
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.A) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.D) && this.leftBoundJudgement()){
+        this.center.getXform().incXPosBy(-10);
+    }
+}
+
+Center.prototype.MoveRight = function(){
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.D) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.A) && this.rightBoundJudgement()){
+        this.center.getXform().incXPosBy(10);
+    }
+    
+}
+
+Center.prototype.MoveUp = function(){
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.W) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.S) && this.topBoundJudgement()){
+        this.center.getXform().incYPosBy(10);
+    }
+    
+}
+
+Center.prototype.MoveDown = function(){
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S) && !gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && this.bottomBoundJudgement() ){
+        this.center.getXform().incYPosBy(-10);
+    }
+}
+
 
 Center.prototype.leftBoundJudgement = function () {
     return (this.center.getXform().getXPos() - this.center.getXform().getWidth()/2 >= -45)
