@@ -19,6 +19,9 @@ function Map(xDimensions, yDimensions, centerLocation)
     this.kTree = "assets/tree.png";
     this.kHouse = "assets/house.png";
     
+    this.kDirt = "assets/MapTextures/dirt2.png";
+    this.kGrass = "assets/MapTextures/grass2.png";
+    
     this.mObjectSource = this.kTree; //The Texture source for new map Objects
     this.mTerrainSource = this.kGrass; //The Texture source for new Terrain
     
@@ -138,7 +141,7 @@ Map.prototype.getCenterLocation = function()
 Map.prototype.addMapObject = function(xPos, yPos)
 {   
     if(document.getElementById("tree").checked){
-        this.mObjectSource = this.kTree
+        this.mObjectSource = this.kTree;
       };
 
     if(document.getElementById("house").checked){
