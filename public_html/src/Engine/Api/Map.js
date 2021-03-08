@@ -17,6 +17,7 @@ function Map(xDimensions, yDimensions, centerLocation)
 {
     //Temp, Should probably have some better way to group objTextures
     this.kTree = "assets/tree.png";
+    this.kHouse = "assets/house.png";
     
     this.mObjectSource = this.kTree; //The Texture source for new map Objects
     
@@ -102,7 +103,15 @@ Map.prototype.getCenterLocation = function()
 
 //Adds new map object to the map object set
 Map.prototype.addMapObject = function(xPos, yPos)
-{
+{   
+    if(document.getElementById("tree").checked){
+        this.mObjectSource = this.kTree
+      };
+
+    if(document.getElementById("house").checked){
+        this.mObjectSource = this.kHouse;
+    };
+
     this.selectObject();
     var newObject = new MapObject(this.mObjectSource, xPos, yPos);
     this.mMapObjects.addToSet(newObject);
@@ -121,6 +130,7 @@ Map.prototype.removeMapObject = function(xPos,yPos)
 //Selects the source texture for new map objects
 Map.prototype.selectObject = function()
 {
+    
     if(document.getElementById("tree").checked){
         this.source = this.kTree;
     }
