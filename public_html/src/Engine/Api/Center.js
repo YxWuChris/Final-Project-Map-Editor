@@ -20,7 +20,10 @@ Center.prototype.update = function(){
     this.MoveLeft()
     this.MoveUp()
     this.MoveRight()
+    this.changeMode()
+}
 
+Center.prototype.changeMode = function(){
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q) && !this.delete_mode) {
         this.delete_mode = true;
         this.center = new TextureRenderable(this.kDelete);
@@ -32,6 +35,7 @@ Center.prototype.update = function(){
         this.center.getXform().setPosition(0, 0);
         this.center.getXform().setSize(10,10);
     }
+
 }
 
 Center.prototype.draw = function(mCamera){
