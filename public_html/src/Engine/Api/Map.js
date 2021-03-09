@@ -221,12 +221,8 @@ Map.prototype.removeMapObject = function(xPos,yPos)
 Map.prototype.selectObject = function()
 {
     
-    if(document.getElementById("tree").checked){
-        this.mObjectSource = this.kTree;
-    }
-    else if(document.getElementById("house").checked){
-        this.mObjectSource = this.kHouse;
-    }
+    var picSource = localStorage.getItem('picSource');
+    this.mObjectSource = picSource;
 
 };
 
