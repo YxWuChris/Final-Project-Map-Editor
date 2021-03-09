@@ -193,14 +193,6 @@ Map.prototype.getCenterLocation = function()
 //Adds new map object to the map object set
 Map.prototype.addMapObject = function(xPos, yPos)
 {   
-    if(document.getElementById("tree").checked){
-        this.mObjectSource = this.kTree;
-      };
-
-    if(document.getElementById("house").checked){
-        this.mObjectSource = this.kHouse;
-    };
-
     this.selectObject();
     var newObject = new MapObject(this.mObjectSource, xPos, yPos);
     this.mMapObjects.addToSet(newObject);
@@ -221,10 +213,10 @@ Map.prototype.selectObject = function()
 {
     
     if(document.getElementById("tree").checked){
-        this.source = this.kTree;
+        this.mObjectSource = this.kTree;
     }
     else if(document.getElementById("house").checked){
-        this.source = this.kHouse;
+        this.mObjectSource = this.kHouse;
     }
 
 };
