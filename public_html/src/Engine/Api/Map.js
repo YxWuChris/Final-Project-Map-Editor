@@ -61,6 +61,10 @@ Map.prototype.update = function()
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Space))
     {
+        if(!this.mHeroMode)
+        {
+            
+        
         if(this.mDeleteMode) //Remove object
         {
             this.removeMapObject(selectorXform.getXPos(), selectorXform.getYPos());
@@ -73,7 +77,7 @@ Map.prototype.update = function()
         {
             this.addMapObject(selectorXform.getXPos(),selectorXform.getYPos()); //Object placement based upon 
         }
-        
+    }
     }
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.H))
@@ -90,6 +94,10 @@ Map.prototype.update = function()
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
     {
+        if(this.mHero !== null)
+        {
+            
+        
         if(!this.mHeroMode)
         {
             this.mHeroMode = true;
@@ -100,6 +108,7 @@ Map.prototype.update = function()
         {
             this.mHeroMode = false;
         }
+    }
     }
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
