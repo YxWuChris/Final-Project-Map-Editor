@@ -46,6 +46,9 @@ function Map(xDimensions, yDimensions, centerLocation)
     //Terrain Object Set for the Maps Terrain to be held
     this.mTerrainSet = new TerrainSet();
     
+    this.mHero = null;
+    this.mHeroMode = false;
+    
     this.initMap();
 }
 
@@ -73,8 +76,38 @@ Map.prototype.update = function()
         
     }
     
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.H))
+    {
+        if(this.mHero === null && !this.mDeleteMode && !this.mTerrainMode && !this.mHeroMode)
+        {
+            this.mHero = new MapHero(selectorXform.getXPos(), selectorXform.getYPos(), this);
+        }
+        else if (!(this.mHero === null) && !this.mDeleteMode && !this.mTerrainMode &&!this.mHeroMode)
+        {
+            this.mHero.placeHero(selectorXform.getXPos(), selectorXform.getYPos());
+        }
+    }
+    
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
+    {
+        if(!this.mHeroMode)
+        {
+            this.mHeroMode = true;
+            this.mDeleteMode = false;
+            this.mTerrain = false;
+        }
+        else
+        {
+            this.mHeroMode = false;
+        }
+    }
+    
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
     {
+        if(!this.mHeroMode)
+        {
+            
+        
         if(this.mDeleteMode)
         {
             this.mDeleteMode = false;
@@ -85,10 +118,13 @@ Map.prototype.update = function()
             this.mTerrainMode = false;
         }
         this.mMapSelector.changeMode();
+        
+        }
     }
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.T))
     {
+        if(!this.mHeroMode){
         if(this.mDeleteMode)
         {
             this.mDeleteMode = false;
@@ -105,8 +141,17 @@ Map.prototype.update = function()
             this.mTerrainMode = true;
         }
     }
+    }
   this.mMapObjects.update();
-  this.mMapSelector.update();  
+  if(this.mHeroMode)
+  {
+      this.mHero.update();
+  }
+  else
+  {
+      this.mMapSelector.update();  
+  }
+  
 };
 
 Map.prototype.draw = function(aCamera)
@@ -118,7 +163,15 @@ Map.prototype.draw = function(aCamera)
     this.mMapObjects.draw(aCamera);
     
     //Always draw the selector last
-    this.mMapSelector.draw(aCamera);
+    if(!this.mHeroMode)
+    {
+        this.mMapSelector.draw(aCamera);
+    }
+    if(this.mHero !== null)
+    {
+        this.mHero.draw(aCamera);
+    }
+    
 };
 
 Map.prototype.getWidth = function()

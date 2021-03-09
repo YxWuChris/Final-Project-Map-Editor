@@ -18,6 +18,8 @@ function MyGame() {
     this.kTree = "assets/tree.png";
     this.kHouse= "assets/house.png";
 
+    //Texutre for the Hero
+    this.kHero = "assets/MapHero.png";
 
     //Textures for Terrain
     this.kDirt = "assets/MapTextures/dirt2.png";
@@ -38,6 +40,7 @@ MyGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kHouse);
     gEngine.Textures.loadTexture(this.kDirt);
     gEngine.Textures.loadTexture(this.kGrass);
+    gEngine.Textures.loadTexture(this.kHero);
 
 };
 
@@ -49,6 +52,7 @@ MyGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHouse);
     gEngine.Textures.unloadTexture(this.kDirt);
     gEngine.Textures.unloadTexture(this.kGrass);
+    gEngine.Textures.unloadTexture(this.kHero);
 };
 
 MyGame.prototype.initialize = function () {
