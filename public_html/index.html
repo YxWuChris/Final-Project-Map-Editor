@@ -53,6 +53,10 @@
             function picSourceChange(str) {
                 localStorage.setItem('picSource', str);
             }
+
+            function terrainSourceChange(str) {
+                localStorage.setItem('terrainSource', str);
+            }
     </script>
     </head>
 
@@ -69,22 +73,15 @@
         <div class="table-conatiner">
         <table class="terrain-table">
         <tr>
-            <td><button id="dirt1"><img src="assets/MapTextures/dirt1.png"></button></td>
-            <td><button id="dirt2"><img src="assets/MapTextures/dirt2.png"></button></td>
-            <td><button id="grass1"><img src="assets/MapTextures/grass1.png"</button></td>
-            <td><button id="grass2"><img src="assets/MapTextures/grass2.png"</button></td>
+            <td><button id="dirt2" onclick="terrainSourceChange('assets/MapTextures/dirt2.png')"><img src="assets/MapTextures/dirt2.png"></button></td>
+            <td><button id="grass1" onclick="terrainSourceChange('assets/MapTextures/grass1.png')"><img src="assets/MapTextures/grass1.png"</button></td>
         </tr>
         <tr>
-            <td><button id="lava1"><img src="assets/MapTextures/lava1.png"></button></td>
-            <td><button id="lava2"><img src="assets/MapTextures/lava2.png"></button></td>
-            <td><button id="stone1"><img src="assets/MapTextures/stone1.png"</button></td>
-            <td><button id="stone2"><img src="assets/MapTextures/stone2.png"</button></td>
+            <td><button id="lava1" onclick="terrainSourceChange('assets/MapTextures/lava1.png')"><img src="assets/MapTextures/lava1.png"></button></td>
+            <td><button id="stone1" onclick="terrainSourceChange('assets/MapTextures/stone1.png')"><img src="assets/MapTextures/stone1.png"</button></td>
         </tr>
         <tr>
-            <td><button id="stone3"><img src="assets/MapTextures/stone3.png"></button></td>
-            <td><button id="water1"><img src="assets/MapTextures/water1.png"></button></td>
-            <td><button id="water2"><img src="assets/MapTextures/water2.png"</button></td>
-            <td><button id="water3"><img src="assets/MapTextures/water3.png"</button></td>
+            <td><button id="water1" onclick="terrainSourceChange('assets/MapTextures/water1.png')"><img src="assets/MapTextures/water1.png"></button></td>
         </tr>
         </table>
      

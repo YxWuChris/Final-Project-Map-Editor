@@ -23,8 +23,12 @@ function MyGame() {
 
     //Textures for Terrain
     this.kDirt = "assets/MapTextures/dirt2.png";
-    this.kGrass = "assets/MapTextures/grass2.png";
+    this.kGrass = "assets/MapTextures/grass1.png";
+    this.kLava = "assets/MapTextures/lava1.png";
+    this.kStone = "assets/MapTextures/stone1.png";
+    this.kWater = "assets/MapTextures/water1.png";
     
+
     //The Map
     this.mMap = null;
     
@@ -41,6 +45,9 @@ MyGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kDirt);
     gEngine.Textures.loadTexture(this.kGrass);
     gEngine.Textures.loadTexture(this.kHero);
+    gEngine.Textures.loadTexture(this.kWater);
+    gEngine.Textures.loadTexture(this.kLava);
+    gEngine.Textures.loadTexture(this.kStone);
 
 };
 

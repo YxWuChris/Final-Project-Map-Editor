@@ -20,7 +20,7 @@ function Map(xDimensions, yDimensions, centerLocation)
     this.kHouse = "assets/house.png";
     
     this.kDirt = "assets/MapTextures/dirt2.png";
-    this.kGrass = "assets/MapTextures/grass2.png";
+    this.kGrass = "assets/MapTextures/grass1.png";
     
     this.mObjectSource = this.kTree; //The Texture source for new map Objects
     this.mTerrainSource = this.kGrass; //The Texture source for new Terrain
@@ -228,19 +228,19 @@ Map.prototype.selectObject = function()
 
 Map.prototype.selectTerrain = function()
 {
-    //Reserved
+    this.mTerrainSource = localStorage.getItem('terrainSource');
 };
 
 Map.prototype.placeTerrain = function(xPos, yPos)
 {
-    
+    this.selectTerrain()
     for(let terrain of this.mTerrainSet.mSet)
     {
         if(terrain.mTerrain.getXform().getXPos() === xPos
                 && terrain.mTerrain.getXform().getYPos() === yPos){
             
             //This needs updating --- SUPER BASIC right now
-                terrain.mTerrain = new TextureRenderable(this.kDirt);
+                terrain.mTerrain = new TextureRenderable(this.mTerrainSource);
                 terrain.mTerrain.getXform().setPosition(xPos,yPos);
                 terrain.mTerrain.getXform().setSize(10,10);
                 break;
