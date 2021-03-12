@@ -13,7 +13,7 @@
 //Accepts dimensions to determine what size map and the location of the Map in WC
 //For Example testing is done with a 10x10 map at (50,50)
 //The size of each map block is 10x10 WC
-function Map(xDimensions, yDimensions, centerLocation)
+function Map(xDimensions, yDimensions, centerLocation,xCellSize, yCellSize)
 {
     //Temp, Should probably have some better way to group objTextures
     this.kTree = "assets/tree.png";
@@ -22,14 +22,18 @@ function Map(xDimensions, yDimensions, centerLocation)
     this.mObjectSource = this.kTree; //The Texture source for new map Objects
     this.mTerrainSource = this.kGrass; //The Texture source for new Terrain
     
+    this.mXCellSize = xCellSize;
+    this.mYCellSize = yCellSize;
+    
+    
     //Setting up the Maps physical dimensions
-    this.mHeight = 10 * xDimensions;
-    this.mWidth = 10 * yDimensions;
+    this.mHeight = this.mYCellSize * xDimensions;
+    this.mWidth = this.mXCellSize * yDimensions;
     this.mCenterLocation = centerLocation;
     
     
     //Creating the Maps Map Selector
-    this.mMapSelector = new MapSelector(this);
+    this.mMapSelector = new MapSelector(this,this.mXCellSize,this.mYCellSize);
     
     //Whether the map is in deletion mode
     this.mDeleteMode = false;
@@ -50,6 +54,7 @@ function Map(xDimensions, yDimensions, centerLocation)
     this.mHero = null;
     this.mHeroMode = false;
     
+    
     this.initMap();
 }
 
@@ -60,26 +65,6 @@ Map.prototype.update = function()
     var selectorXform = this.mMapSelector.selector.getXform(); 
     
     
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Space))
-    {
-        if(!this.mHeroMode)
-        {
-            
-        
-        if(this.mDeleteMode) //Remove object
-        {
-            this.removeMapObject(selectorXform.getXPos(), selectorXform.getYPos());
-        }
-        else if(this.mTerrainMode) //Place new Terrain
-        {
-            this.placeTerrain(selectorXform.getXPos(),selectorXform.getYPos());
-        }
-        else //Add new Object
-        {
-            this.addMapObject(selectorXform.getXPos(),selectorXform.getYPos()); //Object placement based upon 
-        }
-    }
-    }
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.H))
     {
@@ -103,48 +88,8 @@ Map.prototype.update = function()
             this.mHeroMode = false;
         }
     }
-    }
+    } 
     
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
-    {
-        if(!this.mHeroMode)
-        {
-            
-        
-        if(this.mDeleteMode)
-        {
-            this.mDeleteMode = false;
-        }
-        else
-        {
-            this.mDeleteMode = true;
-            this.mTerrainMode = false;
-        }
-        this.mMapSelector.changeMode();
-        
-        }
-    }
-    
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.T))
-    {
-        if(!this.mHeroMode){
-        if(this.mDeleteMode)
-        {
-            this.mDeleteMode = false;
-            this.mMapSelector.changeMode();
-        }
-        
-        //This behaviour is weird, should probably think of a better way
-        if(this.mTerrainMode)
-        {
-            this.mTerrainMode = false;
-        }
-        else
-        {
-            this.mTerrainMode = true;
-        }
-    }
-    }
   this.mMapObjects.update();
   if(this.mHeroMode)
   {
@@ -192,6 +137,71 @@ Map.prototype.getCenterLocation = function()
     return this.mCenterLocation;
 };
 
+Map.prototype.toggleDelete = function()
+{
+    if(!this.mHeroMode)
+        {
+            
+        
+        if(this.mDeleteMode)
+        {
+            this.mDeleteMode = false;
+        }
+        else
+        {
+            this.mDeleteMode = true;
+            this.mTerrainMode = false;
+        }
+        this.mMapSelector.changeMode();
+        
+        }
+};
+
+Map.prototype.toggleTerrain = function()
+{
+    if(!this.mHeroMode){
+        if(this.mDeleteMode)
+        {
+            this.mDeleteMode = false;
+            this.mMapSelector.changeMode();
+        }
+        
+        //This behaviour is weird, should probably think of a better way
+        if(this.mTerrainMode)
+        {
+            this.mTerrainMode = false;
+        }
+        else
+        {
+            this.mTerrainMode = true;
+        }
+    }
+};
+
+Map.prototype.modifySpace = function()
+{
+    //MapSelector location
+    var selectorXform = this.mMapSelector.selector.getXform(); 
+    
+    
+    
+    if(!this.mHeroMode)
+    {
+        if(this.mDeleteMode) //Remove object
+        {
+            this.removeMapObject(selectorXform.getXPos(), selectorXform.getYPos());
+        }
+        else if(this.mTerrainMode) //Place new Terrain
+        {
+            this.placeTerrain(selectorXform.getXPos(),selectorXform.getYPos());
+        }
+        else //Add new Object
+        {
+            this.addMapObject(selectorXform.getXPos(),selectorXform.getYPos()); //Object placement based upon 
+        }
+    }
+    
+};
 
 Map.prototype.placeHero = function(xPos,yPos)
 {
@@ -225,7 +235,7 @@ Map.prototype.placeHero = function(xPos,yPos)
     
     if(this.mHero === null && !this.mDeleteMode && !this.mTerrainMode && !this.mHeroMode)
         {
-            this.mHero = new MapHero(xPos, yPos, this);
+            this.mHero = new MapHero(xPos, yPos,this.mXCellSize,this.mYCellSize, this);
         }
     else if (!(this.mHero === null) && !this.mDeleteMode && !this.mTerrainMode &&!this.mHeroMode)
         {
@@ -271,7 +281,7 @@ Map.prototype.addMapObject = function(xPos, yPos)
     if(placeable)
     {
         this.selectObject();
-        var newObject = new MapObject(this.mObjectSource, xPos, yPos);
+        var newObject = new MapObject(this.mObjectSource, xPos, yPos,this.mXCellSize,this.mYCellSize);
     
         for(let oType of this.mObjectTypes)
         {
@@ -347,7 +357,7 @@ Map.prototype.placeTerrain = function(xPos, yPos)
             
                 terrain.mTerrain = new TextureRenderable(this.mTerrainSource);
                 terrain.mTerrain.getXform().setPosition(xPos,yPos);
-                terrain.mTerrain.getXform().setSize(10,10);
+                terrain.mTerrain.getXform().setSize(this.mXCellSize,this.mYCellSize);
                 
                 for(let tType of this.mTerrainTypes)
                 {
@@ -372,16 +382,16 @@ Map.prototype.addTerrainType = function(textPath, traversability)
 //Initilize the map to have a default terrain
 Map.prototype.initMap = function()
 {
-    var tXPos = 5 + this.mCenterLocation[0] - this.mWidth/2;
-    var tYPos = 5 + this.mCenterLocation[1] - this.mHeight/2;
-    var xDim = this.mWidth / 10;
-    var yDim = this.mHeight/ 10;
+    var tXPos = this.mXCellSize/2 + this.mCenterLocation[0] - this.mWidth/2;
+    var tYPos = this.mYCellSize/2 + this.mCenterLocation[1] - this.mHeight/2;
+    var xDim = this.mWidth / this.mXCellSize;
+    var yDim = this.mHeight/ this.mYCellSize;
     var i,j;
     for(i = 0; i < xDim; i++)
     {
         for(j = 0; j < yDim; j++)
         {
-            var baseTerrain = new Terrain(this.mTerrainSource, true, tXPos + (10 * i),tYPos + (10 * j));
+            var baseTerrain = new Terrain(this.mTerrainSource, true, tXPos + (this.mXCellSize * i),tYPos + (this.mYCellSize * j),this.mXCellSize,this.mYCellSize);
             this.mTerrainSet.addToSet(baseTerrain);
         }
     }

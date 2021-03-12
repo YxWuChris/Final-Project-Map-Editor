@@ -60,7 +60,7 @@
             }
     </script>
     </head>
-
+    
     <body onload="
         var myGame = new MyGame();
         gEngine.Core.initializeEngineCore('GLCanvas', myGame);
@@ -95,6 +95,12 @@
         </div>
         </div>
         <div>
+            <table>
+        <tr>
+            <td><button id="delete">Delete</button></td>
+            <td><button id="terrain" onclick="myGame.mMap.toggleTerrain()">Terrain</button></td>
+        </tr>
+        </table>
         <b>Press "Q" to switch to create/delete mode</b>
         </div>
         <div>

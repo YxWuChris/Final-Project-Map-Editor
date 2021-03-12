@@ -4,14 +4,14 @@
   GameObject */
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MapObject(objText, xPos, yPos) {
+function MapObject(objText, xPos, yPos,xSize,ySize) {
 
 
     this.mText = objText;
     this.mPassable = true;
     this.object = new TextureRenderable(this.mText);
     this.object.getXform().setPosition(xPos, yPos);
-    this.object.getXform().setSize(10,10);
+    this.object.getXform().setSize(xSize,ySize);
     this.delete = false;
 }
 

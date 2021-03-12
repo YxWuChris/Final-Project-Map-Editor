@@ -4,14 +4,17 @@
   GameObject */
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MapHero(xPos,yPos, Map)
+function MapHero(xPos,yPos,xSize,ySize, Map)
 {
     this.kText = "assets/MapHero.png";
     this.mMap = Map;
     
+    this.mXSize = xSize;
+    this.mYSize = ySize;
+    
     this.mHero = new TextureRenderable(this.kText);
     this.mHero.getXform().setPosition(xPos,yPos);
-    this.mHero.getXform().setSize(10,10);
+    this.mHero.getXform().setSize(xSize,ySize);
 }
 
 MapHero.prototype.placeHero = function(xPos,yPos)
@@ -36,27 +39,27 @@ MapHero.prototype.update = function()
 
 MapHero.prototype.MoveLeft = function(){
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.A) && this.leftBoundJudgement()){
-        this.mHero.getXform().incXPosBy(-10);
+        this.mHero.getXform().incXPosBy(-this.mXSize);
     }
 };
 
 MapHero.prototype.MoveRight = function(){
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.D) && this.rightBoundJudgement()){
-        this.mHero.getXform().incXPosBy(10);
+        this.mHero.getXform().incXPosBy(this.mXSize);
     }
     
 };
 
 MapHero.prototype.MoveUp = function(){
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.W) && this.topBoundJudgement()){
-        this.mHero.getXform().incYPosBy(10);
+        this.mHero.getXform().incYPosBy(this.mYSize);
     }
     
 };
 
 MapHero.prototype.MoveDown = function(){
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S) && this.bottomBoundJudgement() ){
-        this.mHero.getXform().incYPosBy(-10);
+        this.mHero.getXform().incYPosBy(-this.mYSize);
     }
 };
 

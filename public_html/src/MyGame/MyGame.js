@@ -66,13 +66,14 @@ MyGame.prototype.unloadScene = function () {
 
 MyGame.prototype.initialize = function () {
 
+//Camera values dependent on the Map values
     this.mCamera = new Camera(
             vec2.fromValues(50, 50),
-            100,
+            100, 
             [0, 0, 600, 600]);
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
-    this.mMap = new Map(10,10,vec2.fromValues(50,50));//Creates a 10x10 Map Centered at 50,50
+    this.mMap = new Map(10,10,vec2.fromValues(50,50) ,10, 10);//Creates a 10x10 Map Centered at 50,50
     
     //Tells the map what type of terrain the texture is
     //Reccommend using a file for large amounts of terrains
@@ -86,6 +87,8 @@ MyGame.prototype.initialize = function () {
     //Same reccomendation as the terrains
     this.mMap.addObjectType(this.kTree, false);
     this.mMap.addObjectType(this.kHouse, false);
+    
+    document.addEventListener("delete", this.mMap.toggleDelete());
     
 };
 
@@ -106,7 +109,27 @@ MyGame.prototype.update = function () {
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.J))
     {
         this.mMap.saveMap("map1");
+        //gEngine.GameLoop.stop();
+    }
+    
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.M))
+    {
+        //this.mMap.saveMap("map1");
         gEngine.GameLoop.stop();
+    }
+    
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
+    {
+        this.mMap.toggleDelete();
+    }
+    
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.T))
+    {
+        this.mMap.toggleTerrain();
+    }
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Space))
+    {
+        this.mMap.modifySpace();
     }
 };
 

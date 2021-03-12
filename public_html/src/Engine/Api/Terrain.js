@@ -9,13 +9,13 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function Terrain(terrainTexture,traversability, xPos, yPos)
+function Terrain(terrainTexture,traversability, xPos, yPos, xSize,ySize)
 {
     this.mTraversable = traversability;
     this.mTerrain = new TextureRenderable(terrainTexture);
     
     this.mTerrain.getXform().setPosition(xPos,yPos);
-    this.mTerrain.getXform().setSize(10,10);
+    this.mTerrain.getXform().setSize(xSize,ySize);
     
 }
 
