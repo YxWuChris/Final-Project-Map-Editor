@@ -19,6 +19,18 @@ function Terrain(terrainTexture,traversability, xPos, yPos)
     
 }
 
+
+Terrain.prototype.setTraversability = function(trav)
+{
+    this.mTraversable = trav;
+};
+
+Terrain.prototype.getTraversability = function()
+{
+    return this.mTraversable;
+};
+
+
 Terrain.prototype.draw = function(aCamera)
 {
   this.mTerrain.draw(aCamera.getVPMatrix());  

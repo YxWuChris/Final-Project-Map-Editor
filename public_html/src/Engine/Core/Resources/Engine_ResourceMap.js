@@ -87,6 +87,12 @@ gEngine.ResourceMap = (function () {
         }
         return c;
     };
+    
+    var saveMap = function (rname , map)
+    {
+        mResourceMap[rname] = new MapEntry(map);
+    };
+    
     //</editor-fold>
 
     // Public interface for this object. Anything not in here will
@@ -101,7 +107,9 @@ gEngine.ResourceMap = (function () {
         retrieveAsset: retrieveAsset,
         unloadAsset: unloadAsset,
         isAssetLoaded: isAssetLoaded,
-        incAssetRefCount: incAssetRefCount
+        incAssetRefCount: incAssetRefCount,
+        
+        saveMap: saveMap
         //</editor-fold>
     };
     return mPublic;

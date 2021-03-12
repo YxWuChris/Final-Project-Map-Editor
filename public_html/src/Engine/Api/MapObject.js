@@ -8,7 +8,7 @@ function MapObject(objText, xPos, yPos) {
 
 
     this.mText = objText;
-
+    this.mPassable = true;
     this.object = new TextureRenderable(this.mText);
     this.object.getXform().setPosition(xPos, yPos);
     this.object.getXform().setSize(10,10);
@@ -23,6 +23,16 @@ MapObject.prototype.setDelete = function()
 MapObject.prototype.getDelete = function()
 {
     return this.delete;
+};
+
+MapObject.prototype.setPassability = function(pass)
+{
+    this.mPassable = pass;
+};
+
+MapObject.prototype.getPassability = function()
+{
+    return this.mPassable;
 };
 
 MapObject.prototype.update = function()

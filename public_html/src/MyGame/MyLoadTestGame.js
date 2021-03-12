@@ -5,7 +5,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MyGame() {
+function MyLoadTestGame() {
 
     //Main Camera
     this.mCamera = null;
@@ -36,7 +36,7 @@ function MyGame() {
 }
 
 
-MyGame.prototype.loadScene = function () {
+MyLoadTestGame.prototype.loadScene = function () {
     // loads the textures
     gEngine.Textures.loadTexture(this.kBound);
     gEngine.Textures.loadTexture(this.kTree);
@@ -51,7 +51,7 @@ MyGame.prototype.loadScene = function () {
 
 };
 
-MyGame.prototype.unloadScene = function () {
+MyLoadTestGame.prototype.unloadScene = function () {
     
     gEngine.Textures.unloadTexture(this.kBound);
     gEngine.Textures.unloadTexture(this.kTree);
@@ -60,11 +60,9 @@ MyGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kDirt);
     gEngine.Textures.unloadTexture(this.kGrass);
     gEngine.Textures.unloadTexture(this.kHero);
-    var nextLevel = new MyLoadTestGame();
-    gEngine.Core.startScene(nextLevel);
 };
 
-MyGame.prototype.initialize = function () {
+MyLoadTestGame.prototype.initialize = function () {
 
     this.mCamera = new Camera(
             vec2.fromValues(50, 50),
@@ -74,22 +72,12 @@ MyGame.prototype.initialize = function () {
 
     this.mMap = new Map(10,10,vec2.fromValues(50,50));//Creates a 10x10 Map Centered at 50,50
     
-    //Tells the map what type of terrain the texture is
-    //Reccommend using a file for large amounts of terrains
-    this.mMap.addTerrainType(this.kGrass, true);
-    this.mMap.addTerrainType(this.kDirt, true);
-    this.mMap.addTerrainType(this.kStone, true);
-    this.mMap.addTerrainType(this.kLava, false);
-    this.mMap.addTerrainType(this.kWater, false);
     
-    //Tells the map what type of Map object it is
-    //Same reccomendation as the terrains
-    this.mMap.addObjectType(this.kTree, false);
-    this.mMap.addObjectType(this.kHouse, false);
+    
     
 };
 
-MyGame.prototype.draw = function () {
+MyLoadTestGame.prototype.draw = function () {
     gEngine.Core.clearCanvas([0.23, 0.40, 0.65, 1.0]);
     this.mCamera.setupViewProjection(); 
 
@@ -99,14 +87,15 @@ MyGame.prototype.draw = function () {
    
 };
 
-MyGame.prototype.update = function () {
+MyLoadTestGame.prototype.update = function () {
 
     this.mMap.update();
     
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.J))
+    if(gEngine.Input.isKeyClicked((gEngine.Input.keys.J)))
     {
-        this.mMap.saveMap("map1");
-        gEngine.GameLoop.stop();
+        
+        this.mMap = this.mMap.loadMap("map1");
+    
     }
 };
 

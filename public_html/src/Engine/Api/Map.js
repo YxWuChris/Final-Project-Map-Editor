@@ -17,9 +17,6 @@ function Map(xDimensions, yDimensions, centerLocation)
 {
     //Temp, Should probably have some better way to group objTextures
     this.kTree = "assets/tree.png";
-    this.kHouse = "assets/house.png";
-    
-    this.kDirt = "assets/MapTextures/dirt2.png";
     this.kGrass = "assets/MapTextures/grass1.png";
     
     this.mObjectSource = this.kTree; //The Texture source for new map Objects
@@ -45,6 +42,10 @@ function Map(xDimensions, yDimensions, centerLocation)
     
     //Terrain Object Set for the Maps Terrain to be held
     this.mTerrainSet = new TerrainSet();
+    
+    //Arrays for traversability and passability
+    this.mTerrainTypes = [];
+    this.mObjectTypes = [];
     
     this.mHero = null;
     this.mHeroMode = false;
@@ -82,14 +83,7 @@ Map.prototype.update = function()
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.H))
     {
-        if(this.mHero === null && !this.mDeleteMode && !this.mTerrainMode && !this.mHeroMode)
-        {
-            this.mHero = new MapHero(selectorXform.getXPos(), selectorXform.getYPos(), this);
-        }
-        else if (!(this.mHero === null) && !this.mDeleteMode && !this.mTerrainMode &&!this.mHeroMode)
-        {
-            this.mHero.placeHero(selectorXform.getXPos(), selectorXform.getYPos());
-        }
+        this.placeHero(selectorXform.getXPos(), selectorXform.getYPos()); 
     }
     
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
@@ -199,31 +193,113 @@ Map.prototype.getCenterLocation = function()
 };
 
 
-//Adds new map object to the map object set
-Map.prototype.addMapObject = function(xPos, yPos)
-{   
-    this.selectObject();
-    var newObject = new MapObject(this.mObjectSource, xPos, yPos);
-    this.mMapObjects.addToSet(newObject);
-};
-
-Map.prototype.removeMapObject = function(xPos,yPos)
+Map.prototype.placeHero = function(xPos,yPos)
 {
-    this.mMapObjects.mSet.forEach(object =>{
+    var placeable = true;
+    for(let object of this.mMapObjects.mSet)
+    {
         if(object.object.getXform().getXPos() === xPos
                 && object.object.getXform().getYPos() === yPos){
-                object.setDelete();
+            placeable = false;
+            break;
         }
-    });
+    }
+    
+    if(placeable)
+    {
+    for(let terrain of this.mTerrainSet.mSet)
+    {
+        if(terrain.mTerrain.getXform().getXPos() === xPos
+                && terrain.mTerrain.getXform().getYPos() === yPos){
+                if(!terrain.getTraversability())
+                {
+                    placeable = false;
+                    break;
+                }
+        }
+    }
+    }
+    
+    if(placeable)
+    {
+    
+    if(this.mHero === null && !this.mDeleteMode && !this.mTerrainMode && !this.mHeroMode)
+        {
+            this.mHero = new MapHero(xPos, yPos, this);
+        }
+    else if (!(this.mHero === null) && !this.mDeleteMode && !this.mTerrainMode &&!this.mHeroMode)
+        {
+            this.mHero.placeHero(xPos, yPos);
+        }
+    }
 };
 
 //Selects the source texture for new map objects
 Map.prototype.selectObject = function()
-{
-    
-    var picSource = localStorage.getItem('picSource');
-    this.mObjectSource = picSource;
+{ 
+    this.mObjectSource = localStorage.getItem('picSource');
+};
 
+//Adds new map object to the map object set
+Map.prototype.addMapObject = function(xPos, yPos)
+{   
+    var placeable = true;
+    for(let object of this.mMapObjects.mSet)
+    {
+        if(object.object.getXform().getXPos() === xPos
+                && object.object.getXform().getYPos() === yPos){
+            placeable = false;
+            break;
+        }
+    }
+    
+    if(placeable)
+    {
+    for(let terrain of this.mTerrainSet.mSet)
+    {
+        if(terrain.mTerrain.getXform().getXPos() === xPos
+                && terrain.mTerrain.getXform().getYPos() === yPos){
+                if(!terrain.getTraversability())
+                {
+                    placeable = false;
+                    break;
+                }
+        }
+    }
+    }
+    
+    if(placeable)
+    {
+        this.selectObject();
+        var newObject = new MapObject(this.mObjectSource, xPos, yPos);
+    
+        for(let oType of this.mObjectTypes)
+        {
+            if(oType.path === this.mObjectSource)
+            {
+                newObject.setPassability(oType.pass);
+                break;
+            }
+        }  
+        this.mMapObjects.addToSet(newObject);
+    }
+};
+
+Map.prototype.removeMapObject = function(xPos,yPos)
+{
+    for(let object of this.mMapObjects.mSet)
+    {
+        if(object.object.getXform().getXPos() === xPos
+                && object.object.getXform().getYPos() === yPos){
+            object.setDelete();
+        }
+    }
+};
+
+Map.prototype.addObjectType = function (textPath, passability)
+{
+  var newObject = {path: textPath, pass: passability};
+  this.mObjectTypes.push(newObject);
 };
 
 Map.prototype.selectTerrain = function()
@@ -233,19 +309,64 @@ Map.prototype.selectTerrain = function()
 
 Map.prototype.placeTerrain = function(xPos, yPos)
 {
-    this.selectTerrain()
+    this.selectTerrain();
+    
+    var placeable = true;
+    var occupied = false;
+    for(let object of this.mMapObjects.mSet)
+    {
+        if(object.object.getXform().getXPos() === xPos
+                && object.object.getXform().getYPos() === yPos ){
+            occupied = true;
+            break;
+        }
+    }
+    if(occupied)
+    { 
+    for(let tType of this.mTerrainTypes)
+    {
+        if(tType.path === this.mTerrainSource)
+        {
+            if(!tType.trav)
+            {
+                placeable = false;
+                break;
+            }
+            
+        }
+    }   
+    }
+    
+    if(placeable)
+    {
+    
     for(let terrain of this.mTerrainSet.mSet)
     {
         if(terrain.mTerrain.getXform().getXPos() === xPos
                 && terrain.mTerrain.getXform().getYPos() === yPos){
             
-            //This needs updating --- SUPER BASIC right now
                 terrain.mTerrain = new TextureRenderable(this.mTerrainSource);
                 terrain.mTerrain.getXform().setPosition(xPos,yPos);
                 terrain.mTerrain.getXform().setSize(10,10);
+                
+                for(let tType of this.mTerrainTypes)
+                {
+                    if(tType.path === this.mTerrainSource)
+                    {
+                        terrain.setTraversability(tType.trav);
+                        break;
+                    }
+                }       
                 break;
         }
     }
+}
+};
+
+Map.prototype.addTerrainType = function(textPath, traversability)
+{
+    var newTerrain = {path: textPath, trav: traversability};
+    this.mTerrainTypes.push(newTerrain);
 };
 
 //Initilize the map to have a default terrain
@@ -263,5 +384,23 @@ Map.prototype.initMap = function()
             var baseTerrain = new Terrain(this.mTerrainSource, true, tXPos + (10 * i),tYPos + (10 * j));
             this.mTerrainSet.addToSet(baseTerrain);
         }
+    }
+};
+
+
+Map.prototype.saveMap = function (mapName)
+{
+  gEngine.ResourceMap.saveMap(mapName, this);  
+};
+
+Map.prototype.loadMap = function (mapName)
+{
+    if(gEngine.ResourceMap.isAssetLoaded(mapName))
+    {
+        return gEngine.ResourceMap.retrieveAsset(mapName);
+    }
+    else
+    {
+        return null;
     }
 };
