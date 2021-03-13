@@ -88,7 +88,6 @@ MyGame.prototype.initialize = function () {
     this.mMap.addObjectType(this.kTree, false);
     this.mMap.addObjectType(this.kHouse, false);
     
-    document.addEventListener("delete", this.mMap.toggleDelete());
     
 };
 

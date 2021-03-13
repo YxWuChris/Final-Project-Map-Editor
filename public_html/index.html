@@ -58,11 +58,11 @@
             function terrainSourceChange(str) {
                 localStorage.setItem('terrainSource', str);
             }
+            var myGame = new MyGame();
     </script>
     </head>
     
     <body onload="
-        var myGame = new MyGame();
         gEngine.Core.initializeEngineCore('GLCanvas', myGame);
      ">
         <div class="flex-container">
@@ -97,8 +97,8 @@
         <div>
             <table>
         <tr>
-            <td><button id="delete">Delete</button></td>
-            <td><button id="terrain" onclick="myGame.mMap.toggleTerrain()">Terrain</button></td>
+            <td><button id="delete" onclick="myGame.mMap.toggleDelete()">Delete Mode</button></td>
+            <td><button id="terrain" onclick="myGame.mMap.toggleTerrain()">Terrain Mode</button></td>
         </tr>
         </table>
         <b>Press "Q" to switch to create/delete mode</b>
