@@ -66,12 +66,25 @@
         gEngine.Core.initializeEngineCore('GLCanvas', myGame);
      ">
         <div class="flex-container">
+        <div class="instruction-container">
+        <b>Press "Q" to switch to create/delete mode</b><br>
+        <b>Press "T" to switch to Terrain Mode</b><br>
+        <b>Press "H" to place and move the Hero</b><br>
+        <b>Press "P" to control the Hero</b><br>
+        <b>Press "Space" switch to create/delete object</b><br>
+        </div>
         <canvas id="GLCanvas" width="600" height="600">
             <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
             Your browser does not support the HTML5 canvas.
             <!-- this message will show only if WebGL clearing failed -->
         </canvas>
-        <div class="table-conatiner">
+        <div class="table-container">
+    
+        <button class="deleteButton" id="delete" onclick="myGame.mMap.toggleDelete()">Delete/Creation Mode</button>
+        <button class="terrainButton" id="terrain" onclick="myGame.mMap.toggleTerrain()">Terrain Mode</button>
+          
+        <div class="name">Terrain</div>
+        <div class="terrain-container">
         <table class="terrain-table">
         <tr>
             <td><button id="dirt2" onclick="terrainSourceChange('assets/MapTextures/dirt2.png')"><img src="assets/MapTextures/dirt2.png"></button></td>
@@ -85,7 +98,9 @@
             <td><button id="water1" onclick="terrainSourceChange('assets/MapTextures/water1.png')"><img src="assets/MapTextures/water1.png"></button></td>
         </tr>
         </table>
-     
+        </div>
+        <div class="name">Object</div>
+        <div class="object-container">
         <table>
         <tr>
             <td><button id="tree" onclick="picSourceChange('assets/tree.png')"><img src="assets/tree.png"></button></td>
@@ -94,26 +109,7 @@
         </table>
         </div>
         </div>
-        <div>
-            <table>
-        <tr>
-            <td><button id="delete" onclick="myGame.mMap.toggleDelete()">Delete Mode</button></td>
-            <td><button id="terrain" onclick="myGame.mMap.toggleTerrain()">Terrain Mode</button></td>
-        </tr>
-        </table>
-        <b>Press "Q" to switch to create/delete mode</b>
         </div>
         <div>
-        <b>Press "T" to switch to Terrain Mode</b>
-        </div>
-        <div>
-        <b>Press "H" to place and move the Hero</b>
-        </div>
-        <div>
-        <b>Press "P" to control the Hero</b>
-        </div>
-         <div>
-        <b>Press "Space" switch to create/delete object</b>
-        </div>
     </body>
 </html>
