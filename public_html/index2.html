@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Demo</title>
-        <link rel ="icon" type ="image/x-icon" href="./assets/MapHero.png">
+        <title>Demo 2</title>
+        <link rel ="icon" type ="image/x-icon" href="./assets/Hero2.png">
         <link rel="stylesheet" href="style.css">
 
         <!-- the following says there are javascript source code contained in 
@@ -44,11 +44,10 @@
         <script type="text/javascript" src="src/Engine/Api/Terrain.js"></script>
         <script type="text/javascript" src="src/Engine/Api/TerrainSet.js"></script>
         <script type="text/javascript" src="src/Engine/Api/MapSelector.js"></script>
-        <script type="text/javascript" src="src/Engine/Api/MapHero.js"></script>
+        <script type="text/javascript" src="src/Engine/Api/ScrollHero.js"></script>
 
         <!-- Client game code -->
-        <script type="text/javascript" src="src/MyGame/MyGame.js"></script>
-        
+        <script type="text/javascript" src="src/MyGame/MyScrollGame.js"></script>
 
         <script>
             function picSourceChange(str) {
@@ -58,7 +57,7 @@
             function terrainSourceChange(str) {
                 localStorage.setItem('terrainSource', str);
             }
-            var myGame = new MyGame();
+            var myGame = new MyScrollGame();
             
     </script>
     </head>
@@ -68,9 +67,7 @@
      ">
         <div class="flex-container">
         <div class="instruction-container">
-        
-        <b>Press "H" to place and move the first Hero</b><br>
-        <b>Press "P" to place and move the second Hero</b><br>
+        <b>Press "H" to place and move the Hero</b><br>       
         <b>Press "Space" switch to create/delete object</b><br>
         </div>
         <canvas id="GLCanvas" width="600" height="600">
@@ -81,38 +78,29 @@
         <div class="table-container">
     
         <button class="deleteButton" id="delete" onclick="myGame.mMap.toggleDelete()">Delete/Creation Mode</button>
-        <button class="terrainButton" id="terrain" onclick="myGame.mMap.toggleTerrain()">Terrain Mode</button>
-        
+        <button class="terrainButton" id="terrain" onclick="myGame.mMap.toggleTerrain()">Background Mode</button>
         <button class="editButton" id="edit" onclick="myGame.mMap.toggleEdit()">Edit Mode On/Off</button>
         <button class="clearButton" id="clear" onclick="myGame.mMap.clearMap()">Clear Map</button>
-        <button class="saveButton" id="save" onclick="myGame.mMap.saveMap('map1')">Save Map</button>
-        <button class="newButton" id="new" onclick="gEngine.GameLoop.stop();">New Map</button>
-        
-        <div class="name">Terrain</div>
+          
+        <div class="name">Backgrounds</div>
         <div class="terrain-container">
         <table class="terrain-table">
         <tr>
-            <td><button id="dirt2" onclick="terrainSourceChange('assets/MapTextures/dirt2.png')"><img src="assets/MapTextures/dirt2.png"></button></td>
-            <td><button id="grass1" onclick="terrainSourceChange('assets/MapTextures/grass1.png')"><img src="assets/MapTextures/grass1.png"</button></td>
-        </tr>
-        <tr>
-            <td><button id="lava1" onclick="terrainSourceChange('assets/MapTextures/lava1.png')"><img src="assets/MapTextures/lava1.png"></button></td>
-            <td><button id="stone1" onclick="terrainSourceChange('assets/MapTextures/stone1.png')"><img src="assets/MapTextures/stone1.png"</button></td>
-        </tr>
-        <tr>
-            <td><button id="water1" onclick="terrainSourceChange('assets/MapTextures/water1.png')"><img src="assets/MapTextures/water1.png"></button></td>
+            <td><button id="caveback1" onclick="terrainSourceChange('assets/MapTextures/caveback1.png')"><img src="assets/MapTextures/caveback1.png"></button></td>
+            <td><button id="caveback2" onclick="terrainSourceChange('assets/MapTextures/caveback2.png')"><img src="assets/MapTextures/caveback2.png"</button></td>
         </tr>
         </table>
         </div>
-        <div class="name">Object</div>
+        <div class="name">Floor/Ceiling</div>
         <div class="object-container">
         <table>
         <tr>
-            <td><button id="tree" onclick="picSourceChange('assets/tree.png')"><img src="assets/tree.png"></button></td>
-            <td><button id="house"onclick="picSourceChange('assets/house.png')"><img src="assets/house.png"></button></td>   
+            <td><button id="cavedirt" onclick="picSourceChange('assets/MapTextures/cavedirt1.png')"><img src="assets/MapTextures/cavedirt1.png"></button></td>
+            <td><button id="cavedirtgrass"onclick="picSourceChange('assets/MapTextures/cavegrassdirt1.png')"><img src="assets/MapTextures/cavegrassdirt1.png"></button></td>
         </tr>
         <tr>
-            <td><button id="flowers"onclick="picSourceChange('assets/flowers.png')"><img src="assets/flowers.png"></button></td>
+             <td><button id="caverock"onclick="picSourceChange('assets/MapTextures/caverock1.png')"><img src="assets/MapTextures/caverock1.png"></button></td>
+             <td><button id="caverock"onclick="picSourceChange('assets/scrollFlowers.png')"><img src="assets/scrollFlowers.png"></button></td>
         </tr>
         </table>
         </div>

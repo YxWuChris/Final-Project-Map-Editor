@@ -4,9 +4,9 @@
   GameObject */
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MapHero(xPos,yPos,xSize,ySize, Map)
+function MapHero(xPos,yPos,xSize,ySize,heroText, Map)
 {
-    this.kText = "assets/MapHero.png";
+    this.kText = heroText;
     this.mMap = Map;
     
     this.mXSize = xSize;
@@ -31,35 +31,89 @@ MapHero.prototype.draw = function(aCamera)
 
 MapHero.prototype.update = function()
 {
-    this.MoveLeft();
-    this.MoveDown();
-    this.MoveRight();
-    this.MoveUp();
+
+};
+
+MapHero.prototype.getHeroPosition = function()
+{
+    return this.mHero.getXform().getPosition();
 };
 
 MapHero.prototype.MoveLeft = function(){
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.A) && this.leftBoundJudgement()){
-        this.mHero.getXform().incXPosBy(-this.mXSize);
+    var hXForm = this.mHero.getXform();
+    var tCheck;
+    var oCheck;
+    
+    if (this.leftBoundJudgement()){
+        
+        oCheck = this.mMap.getTileMapObject(hXForm.getXPos()-this.mXSize,hXForm.getYPos());
+        if(oCheck === null || oCheck.getPassability())
+        {
+            tCheck = this.mMap.getTileTerrain(hXForm.getXPos()-this.mXSize,hXForm.getYPos());
+            if(tCheck !== null && tCheck.getTraversability())
+            {
+                this.mHero.getXform().incXPosBy(-this.mXSize);
+            }
+        }
+        
+        
     }
 };
 
 MapHero.prototype.MoveRight = function(){
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.D) && this.rightBoundJudgement()){
-        this.mHero.getXform().incXPosBy(this.mXSize);
+    var hXForm = this.mHero.getXform();
+    var tCheck;
+    var oCheck;
+    
+    if (this.rightBoundJudgement()){
+        
+        oCheck = this.mMap.getTileMapObject(hXForm.getXPos()+this.mXSize,hXForm.getYPos());
+        if(oCheck === null || oCheck.getPassability())
+        {
+            tCheck = this.mMap.getTileTerrain(hXForm.getXPos()+this.mXSize,hXForm.getYPos());
+            if(tCheck !== null && tCheck.getTraversability())
+            {
+                this.mHero.getXform().incXPosBy(this.mXSize);
+            }
+        }
     }
     
 };
 
 MapHero.prototype.MoveUp = function(){
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.W) && this.topBoundJudgement()){
-        this.mHero.getXform().incYPosBy(this.mYSize);
-    }
+    var hXForm = this.mHero.getXform();
+    var tCheck;
+    var oCheck;
     
+    if (this.topBoundJudgement()){
+        
+        oCheck = this.mMap.getTileMapObject(hXForm.getXPos(),hXForm.getYPos()+this.mYSize);
+        if(oCheck === null || oCheck.getPassability())
+        {
+            tCheck = this.mMap.getTileTerrain(hXForm.getXPos(),hXForm.getYPos()+this.mYSize);
+            if(tCheck !== null && tCheck.getTraversability())
+            {
+                this.mHero.getXform().incYPosBy(this.mYSize);
+            }
+        }
+    } 
 };
 
 MapHero.prototype.MoveDown = function(){
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S) && this.bottomBoundJudgement() ){
-        this.mHero.getXform().incYPosBy(-this.mYSize);
+    var hXForm = this.mHero.getXform();
+    var tCheck;
+    var oCheck;
+    
+    if (this.bottomBoundJudgement()){
+         oCheck = this.mMap.getTileMapObject(hXForm.getXPos(),hXForm.getYPos()-this.mYSize);
+        if(oCheck === null || oCheck.getPassability())
+        {
+            tCheck = this.mMap.getTileTerrain(hXForm.getXPos(),hXForm.getYPos()-this.mYSize);
+            if(tCheck !== null && tCheck.getTraversability())
+            {
+                this.mHero.getXform().incYPosBy(-this.mYSize);
+            }
+        }
     }
 };
 

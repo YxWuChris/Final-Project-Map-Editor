@@ -13,14 +13,14 @@
 //Accepts dimensions to determine what size map and the location of the Map in WC
 //For Example testing is done with a 10x10 map at (50,50)
 //The size of each map block is 10x10 WC
-function Map(xDimensions, yDimensions, centerLocation,xCellSize, yCellSize)
+function Map(xDimensions, yDimensions, centerLocation,xCellSize, yCellSize , startTerrain)
 {
     //Temp, Should probably have some better way to group objTextures
-    this.kTree = "assets/tree.png";
-    this.kGrass = "assets/MapTextures/grass1.png";
-    
-    this.mObjectSource = this.kTree; //The Texture source for new map Objects
-    this.mTerrainSource = this.kGrass; //The Texture source for new Terrain
+   this.mDefaultTerrain = startTerrain;
+   
+   
+    this.mObjectSource = null; //The Texture source for new map Objects
+    this.mTerrainSource = startTerrain; //The Texture source for new Terrain
     
     this.mXCellSize = xCellSize;
     this.mYCellSize = yCellSize;
@@ -41,6 +41,9 @@ function Map(xDimensions, yDimensions, centerLocation,xCellSize, yCellSize)
     //Whether the map is in terrain mode
     this.mTerrainMode = false;
     
+    //Whether the map is in edit mode
+    this.mEditMode = true;
+    
     //Map Object Set for all map objects to be held
     this.mMapObjects = new MapObjectSet(); 
     
@@ -51,9 +54,8 @@ function Map(xDimensions, yDimensions, centerLocation,xCellSize, yCellSize)
     this.mTerrainTypes = [];
     this.mObjectTypes = [];
     
-    this.mHero = null;
-    this.mHeroMode = false;
-    
+    //Holds any and all User defined units' Xform
+    this.mUserUnits = [];
     
     this.initMap();
 }
@@ -61,45 +63,11 @@ function Map(xDimensions, yDimensions, centerLocation,xCellSize, yCellSize)
 
 Map.prototype.update = function()
 {
-    //MapSelector location
-    var selectorXform = this.mMapSelector.selector.getXform(); 
-    
-    
-    
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.H))
-    {
-        this.placeHero(selectorXform.getXPos(), selectorXform.getYPos()); 
-    }
-    
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
-    {
-        if(this.mHero !== null)
-        {
-            
-        
-        if(!this.mHeroMode)
-        {
-            this.mHeroMode = true;
-            this.mDeleteMode = false;
-            this.mTerrain = false;
-        }
-        else
-        {
-            this.mHeroMode = false;
-        }
-    }
-    } 
-    
   this.mMapObjects.update();
-  if(this.mHeroMode)
-  {
-      this.mHero.update();
-  }
-  else
+  if(this.mEditMode)
   {
       this.mMapSelector.update();  
   }
-  
 };
 
 Map.prototype.draw = function(aCamera)
@@ -111,15 +79,17 @@ Map.prototype.draw = function(aCamera)
     this.mMapObjects.draw(aCamera);
     
     //Always draw the selector last
-    if(!this.mHeroMode)
+    if(this.mEditMode)
     {
         this.mMapSelector.draw(aCamera);
     }
-    if(this.mHero !== null)
-    {
-        this.mHero.draw(aCamera);
-    }
     
+};
+
+//Add new UserUnit Xform
+Map.prototype.addUserUnit = function(newUnit)
+{
+    this.mUserUnits.push(newUnit);
 };
 
 Map.prototype.getWidth = function()
@@ -139,7 +109,7 @@ Map.prototype.getCenterLocation = function()
 
 Map.prototype.toggleDelete = function()
 {
-    if(!this.mHeroMode)
+    if(this.mEditMode)
         {
             
         
@@ -159,7 +129,7 @@ Map.prototype.toggleDelete = function()
 
 Map.prototype.toggleTerrain = function()
 {
-    if(!this.mHeroMode){
+    if(this.mEditMode){
         if(this.mDeleteMode)
         {
             this.mDeleteMode = false;
@@ -178,6 +148,18 @@ Map.prototype.toggleTerrain = function()
     }
 };
 
+Map.prototype.toggleEdit = function()
+{
+    if(this.mEditMode)
+    {
+        this.mEditMode = false;
+    }
+    else
+    {
+        this.mEditMode = true;
+    }
+};
+
 Map.prototype.modifySpace = function()
 {
     //MapSelector location
@@ -185,7 +167,7 @@ Map.prototype.modifySpace = function()
     
     
     
-    if(!this.mHeroMode)
+    if(this.mEditMode)
     {
         if(this.mDeleteMode) //Remove object
         {
@@ -201,47 +183,6 @@ Map.prototype.modifySpace = function()
         }
     }
     
-};
-
-Map.prototype.placeHero = function(xPos,yPos)
-{
-    var placeable = true;
-    for(let object of this.mMapObjects.mSet)
-    {
-        if(object.object.getXform().getXPos() === xPos
-                && object.object.getXform().getYPos() === yPos){
-            placeable = false;
-            break;
-        }
-    }
-    
-    if(placeable)
-    {
-    for(let terrain of this.mTerrainSet.mSet)
-    {
-        if(terrain.mTerrain.getXform().getXPos() === xPos
-                && terrain.mTerrain.getXform().getYPos() === yPos){
-                if(!terrain.getTraversability())
-                {
-                    placeable = false;
-                    break;
-                }
-        }
-    }
-    }
-    
-    if(placeable)
-    {
-    
-    if(this.mHero === null && !this.mDeleteMode && !this.mTerrainMode && !this.mHeroMode)
-        {
-            this.mHero = new MapHero(xPos, yPos,this.mXCellSize,this.mYCellSize, this);
-        }
-    else if (!(this.mHero === null) && !this.mDeleteMode && !this.mTerrainMode &&!this.mHeroMode)
-        {
-            this.mHero.placeHero(xPos, yPos);
-        }
-    }
 };
 
 //Selects the source texture for new map objects
@@ -280,6 +221,19 @@ Map.prototype.addMapObject = function(xPos, yPos)
     
     if(placeable)
     {
+        for (let unit of this.mUserUnits)
+        {
+            if(unit.getXPos() === xPos
+                    && unit.getYPos() === yPos)
+            {
+                placeable = false;
+                break;
+            }
+        }
+    }
+    
+    if(placeable)
+    {
         this.selectObject();
         var newObject = new MapObject(this.mObjectSource, xPos, yPos,this.mXCellSize,this.mYCellSize);
     
@@ -312,6 +266,19 @@ Map.prototype.addObjectType = function (textPath, passability)
   this.mObjectTypes.push(newObject);
 };
 
+//Return the object at the given position. Returns null if no Object in that space
+Map.prototype.getTileMapObject = function(xPos, yPos)
+{
+    for(let object of this.mMapObjects.mSet)
+    {
+        if(object.object.getXform().getXPos() === xPos
+                && object.object.getXform().getYPos() === yPos ){
+            return object;
+        }
+    }
+    return null;
+};
+
 Map.prototype.selectTerrain = function()
 {
     this.mTerrainSource = localStorage.getItem('terrainSource');
@@ -331,6 +298,20 @@ Map.prototype.placeTerrain = function(xPos, yPos)
             break;
         }
     }
+    
+    if(placeable)
+    {
+        for (let unit of this.mUserUnits)
+        {
+            if(unit.getXPos() === xPos
+                    && unit.getYPos() === yPos)
+            {
+                occupied = true;
+                break;
+            }
+        }
+    }
+    
     if(occupied)
     { 
     for(let tType of this.mTerrainTypes)
@@ -345,7 +326,9 @@ Map.prototype.placeTerrain = function(xPos, yPos)
             
         }
     }   
-    }
+    }  
+    
+    
     
     if(placeable)
     {
@@ -379,6 +362,20 @@ Map.prototype.addTerrainType = function(textPath, traversability)
     this.mTerrainTypes.push(newTerrain);
 };
 
+//Returns the Terrain at the given position
+Map.prototype.getTileTerrain = function(xPos,yPos)
+{
+    for(let terrain of this.mTerrainSet.mSet)
+    {
+        if(terrain.mTerrain.getXform().getXPos() === xPos
+                && terrain.mTerrain.getXform().getYPos() === yPos){
+                
+                return terrain;
+        }
+    }
+    return null;
+};
+
 //Initilize the map to have a default terrain
 Map.prototype.initMap = function()
 {
@@ -397,6 +394,18 @@ Map.prototype.initMap = function()
     }
 };
 
+Map.prototype.clearMap = function()
+{
+    this.mTerrainSet = null;
+    this.mMapObjects = null;
+    
+    this.mMapObjects = new MapObjectSet(); 
+    this.mTerrainSet = new TerrainSet();
+    
+    this.mTerrainSource = this.mDefaultTerrain;
+    
+    this.initMap();
+};
 
 Map.prototype.saveMap = function (mapName)
 {
@@ -411,6 +420,6 @@ Map.prototype.loadMap = function (mapName)
     }
     else
     {
-        return null;
+        return this;
     }
 };
