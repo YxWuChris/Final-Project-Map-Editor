@@ -102,14 +102,41 @@
         </div>
         </div>
         </div>
+        <a href="index.html"><button class="index">Demo 1</button></a>
+        <a href="MapEditorApiDocumentation.html"><button class="apiButton">API Document</button></a>
+        <span id='CurMode'></span>
         <div class="instruction-container">
         <div>
         <b>Press "H" to place and move the Hero</b><br>       
         <b>Press "Space" switch to create/delete object</b><br>
         </div>
         <div>
-        <a href="MapEditorApiDocumentation.html"><button class="apiButton">API Doucment</button></a>
+        
+        
         </div>
         </div>
+        
+        <script>
+            var gCurMode = function(mode)
+            {
+                var elm = document.getElementById("CurMode");
+                if(mode === "Terrain Mode")
+                {
+                    elm.innerHTML = "<b>Current Mode: </b>Background Mode";
+                }
+                else if(mode ==="Object Mode")
+                {
+                    elm.innerHTML = "<b>Current Mode: </b>Floor/Ceiling Mode";
+                }
+                else
+                {
+                    elm.innerHTML = "<b>Current Mode: </b>" + mode;
+                }
+                    
+                
+            };
+            
+        </script>
+        
     </body>
 </html>

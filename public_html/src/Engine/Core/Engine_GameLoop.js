@@ -46,6 +46,25 @@ gEngine.GameLoop = (function () {
             }
             // Step D: now let's draw
             this.draw();    // Call Scene.draw()
+            if(this.mMap.mEditMode)
+            {
+                if(this.mMap.mDeleteMode)
+                {
+                    gCurMode("Delete Mode");
+                }
+                else if (this.mMap.mTerrainMode)
+                {
+                    gCurMode("Terrain Mode");
+                }
+                else
+                {
+                    gCurMode("Object Mode");
+                }
+            }
+            else
+            {
+                gCurMode("Edit Mode Off");
+            }
         } else {
             // this scene is done, unload it!
             mMyGame.unloadScene();

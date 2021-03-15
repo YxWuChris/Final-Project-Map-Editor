@@ -112,6 +112,9 @@
         </div>
         </div>
         </div>
+        <a href="index2.html"><button class="index">Demo 2</button></a>
+        <a href="MapEditorApiDocumentation.html"><button class="apiButton">API Document</button></a>
+        <span id='CurMode'></span>
         <div class="instruction-container">
         <div>
         <b>Press "H" to place and move the first Hero</b><br>
@@ -119,8 +122,18 @@
         <b>Press "Space" switch to create/delete object</b><br>
         </div>
         <div>
-        <a href="MapEditorApiDocumentation.html"><button class="apiButton">API Doucment</button></a>
+        
+        
         </div>
         </div>
+        <script>
+            var gCurMode = function(mode)
+            {
+                var elm = document.getElementById("CurMode");
+                elm.innerHTML = "<b>Current Mode: </b>" + mode;
+            };
+            
+        </script>
+        
     </body>
 </html>
